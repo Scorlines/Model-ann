@@ -7,8 +7,6 @@ Proyek ini merupakan tugas akhir mata kuliah Intelegensi Buatan yang berfokus pa
 ### Langkah Pengerjaan 1: Pembuatan Model ANN – Training & Testing
 Tim diwajibkan untuk melakukan eksplorasi dengan memanfaatkan dan memodifikasi model ANN yang telah dipelajari sebelumnya untuk melakukan klasifikasi pada salah satu dari dataset berikut:
 - **Incomes of 30K USA Citizens Dataset** (https://www.kaggle.com/datasets/jacopoferretti/incomes-of-30k-usacitizens)
-- **Iris Flower Dataset** (https://www.kaggle.com/datasets/arshid/iris-flower-dataset)
-- **Disease Symptoms and Patient Profile Dataset** (https://www.kaggle.com/datasets/uom190346a/diseasesymptoms-and-patient-profile-dataset)
 
 Dataset yang digunakan dalam proyek ini adalah **Incomes of 30K USA Citizens Dataset**, yang merupakan binary-class classification untuk memprediksi apakah pendapatan seseorang >50K atau ≤50K.
 
@@ -33,6 +31,86 @@ Laporan hasil eksplorasi disusun dalam format PDF dengan struktur bab sebagai be
 - Font: Times New Roman, ukuran 12
 - Spasi: 1.5
 - Margin: Top 2.5cm, Bottom 2.5cm
+
+## Penjelasan Model ANN
+
+### Apa itu Artificial Neural Network (ANN)?
+Artificial Neural Network (ANN) adalah model komputasi yang terinspirasi dari struktur dan fungsi jaringan saraf biologis pada otak manusia. ANN terdiri dari lapisan-lapisan neuron yang saling terhubung, di mana setiap koneksi memiliki bobot yang menentukan kekuatan sinyal yang dikirim. ANN digunakan untuk mempelajari pola kompleks dari data dan membuat prediksi berdasarkan pola tersebut.
+
+Dalam konteks klasifikasi, ANN dapat belajar untuk mengenali pola dalam data input dan mengklasifikasikan data baru ke dalam kategori yang sesuai. Model ANN dalam proyek ini digunakan untuk klasifikasi binary: memprediksi apakah pendapatan seseorang lebih dari $50,000 per tahun atau tidak.
+
+### Dataset yang Digunakan
+Dataset **Incomes of 30K USA Citizens** diambil dari Kaggle (https://www.kaggle.com/datasets/jacopoferretti/incomes-of-30k-usacitizens). Dataset ini berisi informasi demografis dan ekonomi dari 30,000 warga Amerika Serikat, dengan fitur-fitur seperti:
+- **age**: Usia individu
+- **workclass**: Jenis pekerjaan (private, self-emp-not-inc, dll.)
+- **fnlwgt**: Bobot final sampling
+- **education**: Tingkat pendidikan
+- **education-num**: Jumlah tahun pendidikan
+- **marital-status**: Status pernikahan
+- **occupation**: Pekerjaan
+- **relationship**: Hubungan dalam keluarga
+- **race**: Ras
+- **sex**: Jenis kelamin
+- **capital-gain**: Keuntungan modal
+- **capital-loss**: Kerugian modal
+- **hours-per-week**: Jam kerja per minggu
+- **native-country**: Negara asal
+- **income**: Target variable (≤50K atau >50K)
+
+Dataset ini merupakan binary classification problem dengan 14 fitur input dan 1 target output.
+
+### Preprocessing Data
+Sebelum melatih model ANN, data melalui beberapa tahap preprocessing:
+1. **Handling Missing Values**: Menghapus baris yang mengandung nilai kosong
+2. **Encoding Kategorikal**: Menggunakan Label Encoding untuk mengubah fitur kategorikal menjadi numerik
+3. **Feature Scaling**: Menggunakan StandardScaler untuk menormalkan fitur numerikal
+4. **Data Splitting**: Membagi data menjadi training (70%), validation (15%), dan testing (15%)
+
+### Arsitektur Model ANN
+Model ANN yang dibangun memiliki arsitektur sebagai berikut:
+
+```
+Input Layer (14 neurons) → Hidden Layer 1 (128 neurons) → Hidden Layer 2 (64 neurons) → Hidden Layer 3 (32 neurons) → Hidden Layer 4 (16 neurons) → Output Layer (2 neurons)
+```
+
+**Detail Lapisan:**
+- **Input Layer**: 14 neuron sesuai dengan jumlah fitur
+- **Hidden Layer 1**: 128 neuron dengan aktivasi ReLU, Batch Normalization, dan Dropout 0.3
+- **Hidden Layer 2**: 64 neuron dengan aktivasi ReLU, Batch Normalization, dan Dropout 0.3
+- **Hidden Layer 3**: 32 neuron dengan aktivasi ReLU, Batch Normalization, dan Dropout 0.2
+- **Hidden Layer 4**: 16 neuron dengan aktivasi ReLU
+- **Output Layer**: 2 neuron dengan aktivasi Softmax untuk klasifikasi binary
+
+**Teknik Regularisasi:**
+- **Batch Normalization**: Untuk menstabilkan dan mempercepat training
+- **Dropout**: Untuk mencegah overfitting (0.3 pada layer 1-2, 0.2 pada layer 3)
+
+### Hyperparameters dan Training
+- **Optimizer**: Adam dengan learning rate awal 0.001
+- **Loss Function**: Sparse Categorical Crossentropy
+- **Batch Size**: 32
+- **Epochs**: Maksimal 100, dengan Early Stopping (patience=15)
+- **Learning Rate Scheduling**: ReduceLROnPlateau dengan factor 0.5 dan patience=5
+
+**Callbacks:**
+- **Early Stopping**: Menghentikan training jika validation loss tidak membaik selama 15 epoch
+- **Reduce Learning Rate**: Mengurangi learning rate jika validation loss tidak membaik selama 5 epoch
+
+### Evaluasi Model
+Model dievaluasi menggunakan metrik-metrik berikut:
+- **Accuracy**: Persentase prediksi yang benar
+- **Precision**: Proporsi prediksi positif yang benar
+- **Recall**: Proporsi kasus positif yang terdeteksi
+- **F1-Score**: Harmonic mean dari precision dan recall
+- **Confusion Matrix**: Matriks yang menunjukkan true positive, false positive, true negative, false negative
+
+Hasil evaluasi ditampilkan untuk data training, validation, dan testing secara terpisah untuk memastikan tidak ada overfitting.
+
+### Visualisasi Hasil
+Program menghasilkan tiga visualisasi utama:
+1. **Training History**: Grafik akurasi dan loss selama training
+2. **Confusion Matrix**: Heatmap matriks konfusi
+3. **Performance Comparison**: Perbandingan akurasi dan loss antar dataset
 
 ## Struktur Proyek
 
